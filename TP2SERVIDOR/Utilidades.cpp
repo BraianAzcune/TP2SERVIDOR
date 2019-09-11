@@ -28,19 +28,23 @@ Utilidades::~Utilidades() {
  * @param ruta
  * @return 
  */
-//int Utilidades::getSize(std::string ruta){
-//    std::ifstream testFile(ruta, std::ios::binary);
-//    
-//    if(!testFile.is_open()){
-//        return -1;
-//    }else{
-//        const std::streampos begin = testFile.tellg();
-//        testFile.seekg (0, std::ios::end);
-//        const std::streampos end = testFile.tellg();
-//        int fsize = (end-begin);
-//        testFile.close();
-//        return fsize;
-//    }
+size_t Utilidades::obtenerSize(string ruta){
+    
+    size_t rta=-1;
+    struct stat64 sb;
+    
+    if(stat64(ruta.c_str(),&sb)==-1){
+        perror("Error en lectura del archivo 'obtenerSize'");
+    }else{
+        if(S_ISREG(sb.st_mode)!=0){//archivo normal
+            rta=sb.st_size;
+        }else{
+            perror("No es archivo ordinario no se puede operar con el");
+        }
+    }
+    
+    return rta;
+}
     
 /**
  * Dado una ruta, responde si el archivo no existe, es valido para estar en ram, o no es valido.

@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
 #define ELPUERTO 44666
 
 using namespace std;
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
     
+    //ENVIAR DATOS
     int contador=0;
     while(contador<=strlen(msg)){//menor igual, por el caracter \0       
         contador+=send(sockfd,msg,strlen(msg)+1,0);//ENVIA EL CARACTER \0, PARA INDICAR FIN DE STRING. por eso el +1
@@ -51,10 +53,24 @@ int main(int argc, char *argv[])
     }
     
     
-    
+    //RECIBIR DATOS
     char recibir[4000];
-
-    recv(sockfd,recibir,sizeof(recibir),0);
+    
+    string ruta=msg;
+    
+    string nombreArchivo = ruta.substr(ruta.find_last_of("/\\") + 1);//SI RUTA ES /HOME/BRAIAN/queseyo.txt | nombreArchivo=queseyo.txt
+    
+    ofstream manejadorArchivosGuardar(nombreArchivo,ofstream::binary);
+    
+    int datosRecibidos=1;
+    while(datosRecibidos!=0){
+        datosRecibidos=recv(sockfd,recibir,sizeof(recibir),0);
+        
+        manejadorArchivosGuardar.write(recibir,datosRecibidos);
+        
+    }
+    
+    manejadorArchivosGuardar.close();
 
     printf("recibimos del servidor: %s",recibir);
 

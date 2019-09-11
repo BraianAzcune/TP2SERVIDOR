@@ -34,7 +34,7 @@ ARCHIVO ManejadorCache::consultaArchivo(string direccionArchivo) {
  * @param file
  */
 void ManejadorCache::agregarArchivo(ARCHIVO file) {
-
+    cout<<"Soy agregar archivo, actualmente no agrego nada.\n";
 }
 /**
  *Constructor 

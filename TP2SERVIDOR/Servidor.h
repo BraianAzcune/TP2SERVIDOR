@@ -78,7 +78,7 @@ void manejarPeticion();
 /**
  * @param file
  */
-void enviar(struct ARCHIVO &file);
+void enviar(struct ARCHIVO file);
     
 /**
  * genera un string con el path que haya enviado el cliente.

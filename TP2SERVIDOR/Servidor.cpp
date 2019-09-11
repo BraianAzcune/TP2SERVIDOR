@@ -99,7 +99,7 @@ void Servidor::escuchar() {
         cout<<"LLEGO UN CLIENTE\n";
         this->manejarPeticion();
         //FINALIZAR CONEXION
-        close(this->socketCliente);
+        this->cerrarConexion();
     }
     
 }
@@ -116,13 +116,40 @@ void Servidor::manejarPeticion() {
     
     struct ARCHIVO file=this->ma->obtenerArchivo(path);
     
+    //cout<<"\nPRUEBAS\n";
+    //cout<<"ANTES tamaño del archivo= "<<file.size<<"\n";
+    
+    this->enviar(file);//SE LE ENVIA EL ARCHIVO POR VALOR, NO TIENE EFECTO LAS MODIFICACIONES QUE REALICE.
+    
+    //cout<<"DESPUES tamaño del archivo= "<<file.size<<"\n";
+    
+    
+    
+    //Nos vamos a atender al siguiente.
+    
 }
 
 /**
  * @param file
  */
-void Servidor::enviar(ARCHIVO &file) {
-
+void Servidor::enviar(ARCHIVO file) {
+    //file.size=file.size/2;
+    //cout<<"DENTRO tamaño del archivo= "<<file.size<<"\n";
+    int datosEnviados;
+    size_t totalEnviado=0;
+    size_t bytesRestantes=file.size;
+    while(totalEnviado<bytesRestantes){
+        datosEnviados=send(this->socketCliente,file.puntero+totalEnviado,bytesRestantes,0);
+        
+        if(datosEnviados==-1){//FALLO LA TRANSMICION, CORTAMOS
+            break;
+            perror("Fallo la transmicion, el cliente no esta conectado, o se corto la conexion");
+        }
+        
+        cout<<"Logre enviar="<<datosEnviados<<"\n";
+        totalEnviado+=datosEnviados;
+        bytesRestantes-=datosEnviados;
+    }
 }
 
 /**
@@ -164,7 +191,7 @@ string Servidor::crearSolicitud() {
         
     }
     
-    //cout<<"El contenido de path es= "<<path<<"\n";
+    cout<<"El contenido de path es= "<<path<<"\n";
 
     //prueba de envio.
     //char msg[]="\nsoy el servidor\n";
@@ -176,7 +203,7 @@ string Servidor::crearSolicitud() {
 }
 
 void Servidor::cerrarConexion() {
-
+    close(this->socketCliente);
 }
 
 /**

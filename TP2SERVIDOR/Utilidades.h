@@ -17,7 +17,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <iostream>
-
+#include "ARCHIVO.h"
 
 
 using namespace std;
@@ -32,15 +32,8 @@ public:
     virtual ~Utilidades();
     
     
-    /**
-     *recibe una ruta, y devuelve la cantidad de bytes que ocupa el fichero especificado.
-     * o -1 en caso de que no lo pueda abrir.
-     * @example 
-     * cout << "Tamaño del archivo "<<ARCHIVO<<" "<<Utilidades::getSize(ARCHIVO)<< " bytes";
-     * @param string ruta
-     * @return int (numero de bytes), si error -1 
-     */
-//    static int getSize(std::string ruta);//METODO ESTATICO
+    static size_t obtenerSize(string ruta);
+    
     
     
     const static size_t MAX_SIZE512M=5.12e8;//ESO DICE 512 MEGABYTES, en notacion cientifica, porque esta representado en bytes.
